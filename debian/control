@@ -16,6 +16,7 @@ Package: neurosynth-dataset
 Architecture: all
 Depends: ${misc:Depends}
 Enhances: python-neurosynth
+Suggests: python-neurosynth
 Description: neurosynth - dataset of extracted terms and activations
  NeuroSynth is a platform for large-scale, automated synthesis of
  functional magnetic resonance imaging (fMRI) data extracted from
@@ -28,6 +29,8 @@ Description: neurosynth - dataset of extracted terms and activations
 Package: fsl-neurosynth-atlas
 Architecture: all
 Depends: ${misc:Depends}
+Recommends: fslview
+Conflicts: fslview (<< 4.0.1-2~)
 Description: neurosynth - atlas for use with FSL, all 525 terms
  NeuroSynth is a platform for large-scale, automated synthesis of
  functional magnetic resonance imaging (fMRI) data extracted from
@@ -39,11 +42,16 @@ Description: neurosynth - atlas for use with FSL, all 525 terms
  location.  Statistical maps should correspond to the one currently
  found on http://beta.neurosynth.org.  All 525 terms are included.
  .
- Disclaimer: this atlas is not a part of official FSL distribution.
+ Disclaimer: this atlas is not a part of official FSL distribution and
+ at the moment requires patched fslview (available in NeuroDebian) for
+ correct visualization.
 
 Package: fsl-neurosynth-top100-atlas
 Architecture: all
 Depends: ${misc:Depends}
+Recommends: fslview
+Suggests: fsl-neurosynth-atlas
+Conflicts: fslview (<< 4.0.1-2~)
 Description: neurosynth - atlas for use with FSL, top 100 terms
  NeuroSynth is a platform for large-scale, automated synthesis of
  functional magnetic resonance imaging (fMRI) data extracted from
@@ -57,4 +65,7 @@ Description: neurosynth - atlas for use with FSL, top 100 terms
  number of articles) terms are included to provide a lightweight
  version of the atlas.
  .
- Disclaimer: this atlas is not a part of official FSL distribution.
+ Disclaimer: this atlas is not a part of official FSL distribution and
+ at the moment requires patched fslview (available in NeuroDebian) for
+ correct visualization.
+

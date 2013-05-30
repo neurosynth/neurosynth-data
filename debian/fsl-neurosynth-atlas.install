@@ -1,2 +1,2 @@
-build/NeuroSynth/NeuroSynth-p*.xml usr/share/data/neurosynth/atlases/
-build/NeuroSynth/NeuroSynth/NeuroSynth-p*.xml usr/share/data/neurosynth/atlases/NeuroSynth/
+build/NeuroSynth-p*.xml usr/share/data/neurosynth/atlases/
+build/NeuroSynth/NeuroSynth-p* usr/share/data/neurosynth/atlases/NeuroSynth/
