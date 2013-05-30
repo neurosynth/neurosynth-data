@@ -3,7 +3,7 @@ Upstream-Name: neurosynth-data
 Upstream-Contact: Tal Yarkoni <tyarkoni@gmail.com>
 Source: https://github.com/NeuroSynth/neurosynth-data
 
-Files: data/*
+Files: *
 Copyright: 2011-2013, Tal Yarkoni
 License: ODbL-1.0
 

@@ -24,7 +24,6 @@ get_orig_source:
 	curl -O http://neurosynth.org/data/current_data.tar.gz && \
 	nuver=`tar -tzvf current_data.tar.gz | awk '{print $$4;}' | sort -nr | head -n 1 | sed -e 's,-,,g' -e 's,^,0.0.,g'` && \
 	tar -xzvf current_data.tar.gz && \
-	mv {database,features}.txt data/ && \
-	git add data/*.txt && git commit -m "Fresh data v. $$nver" && \
+	git add *.txt && git commit -m "Fresh data v. $$nver" && \
 	git tag -m "NeuroSynth dataset v. $$nver" $$nver && \
 	dch --newversion $$nver-1 --force-distribution --distribution data

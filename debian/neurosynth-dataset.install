@@ -1,1 +1,1 @@
-data/*.txt usr/share/data/neurosynth/
+*.txt usr/share/data/neurosynth/
