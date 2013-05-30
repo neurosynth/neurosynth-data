@@ -275,34 +275,43 @@ if __name__ == "__main__":
         nfeatures = len(top_features)
         image_type_ = image_types[name][0]
 
+        if nfeatures != len(dataset.get_feature_names()):
+            filesuffix = "-top%d" % (nfeatures,)
+            atlassuffix = " %d top terms" % (nfeatures,)
+        else:
+            filesuffix = ""
+            atlassuffix = " all %d terms" % (nfeatures,)
+ 
         statmaps = r_volume.get_data()
         if '_z' in name:
             atlas_kwargs = dict(
                 type_="Statistic",
                 images_thr=[2.3],
                 atlas_options=dict(
-                    shortname="NST%d" % nfeatures,
                     precision=2,
                     statistic="z",
                     units=""))
             features = top_features
         else:
             assert(name == 'pA')
-            # This is not good anyways since below functionality assumes 4d image with
+            # This is not good anyways -- makes fslview crash, so do
+            # not use for now
+            raise NotImplemented("fslview pukes on this one")
             atlas_kwargs = dict(
                 type_="Probabilistic",
                 images_thr=[],
-                atlas_options=dict(shortname="NST%d" % nfeatures))
+                atlas_options=dict())
             features = ['Articles prior']
             statmaps = statmaps[..., None] # add rudimentary 4th dimension
 
         atlas_kwargs['atlas_options'].update(
             dict(
+                shortname="NST%s" % filesuffix,
                 description =
                     "Generated using NeuroSynth %s using dataset from 2013-03-28 "
                     "with following analysis parameters: "
-                    "%d top terms FDR=%.2f threshold=%g min_studies=%.2f"
-                    % (neurosynth.__version__, nfeatures, q, threshold, min_studies),
+                    "%s FDR=%.2f threshold=%g min_studies=%.2f"
+                    % (neurosynth.__version__, atlassuffix, q, threshold, min_studies),
                 lower="%.2f" % rminabs,
                 upper="%.2f" % rmaxabs,
                 )
@@ -311,9 +320,10 @@ if __name__ == "__main__":
         a = make_atlas(
             {2: statmaps},
             features,
-            "NeuroSynth (http://neurosynth.org) %d terms (%s)" % (nfeatures, image_type_),
-            name="NeuroSynth-%d-%s" % (nfeatures, image_type_),
-            imagefilename="NeuroSynth-%d-%s" % (nfeatures, image_type_),
+            "NeuroSynth (http://neurosynth.org)%s (%s)" \
+              % (atlassuffix, image_type_),
+            name="NeuroSynth%s-%s" % (filesuffix, image_type_),
+            imagefilename="NeuroSynth%s-%s" % (filesuffix, image_type_),
             topdir=args.output_directory,
             subdir='NeuroSynth',
             nifti_hdrs={2: r_volume.get_header()},
