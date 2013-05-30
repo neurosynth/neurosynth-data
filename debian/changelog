@@ -1,0 +1,5 @@
+neurosynth-data (0.0.20130328-1) data; urgency=low
+
+  * Initial release.
+
+ -- Yaroslav Halchenko <debian@onerussian.com>  Thu, 30 May 2013 11:19:54 -0400

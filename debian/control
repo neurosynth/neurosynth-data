@@ -1,0 +1,60 @@
+Source: neurosynth-data
+Section: science
+Priority: extra
+Maintainer: NeuroDebian Team <team@neuro.debian.net>
+Uploaders: Yaroslav Halchenko <debian@onerussian.com>,
+           Michael Hanke <mih@debian.org>
+Build-Depends: debhelper (>= 7.0.50~),
+			   python-neurosynth,
+               python-nibabel, python-lxml,
+Standards-Version: 3.9.4
+Homepage: http://neurosynth.org
+Vcs-Browser: https://github.com/NeuroSynth/neurosynth-data
+Vcs-Git: git://github.com/NeuroSynth/neurosynth-data -b debian
+
+Package: neurosynth-dataset
+Architecture: all
+Depends: ${misc:Depends}
+Enhances: python-neurosynth
+Description: neurosynth - dataset of extracted terms and activations
+ NeuroSynth is a platform for large-scale, automated synthesis of
+ functional magnetic resonance imaging (fMRI) data extracted from
+ published articles.
+ .
+ This package provides dataset files containing extracted information,
+ which could be used by e.g. neurosynth Python module for
+ meta-analysis.
+
+Package: fsl-neurosynth-atlas
+Architecture: all
+Depends: ${misc:Depends}
+Description: neurosynth - atlas for use with FSL, all 525 terms
+ NeuroSynth is a platform for large-scale, automated synthesis of
+ functional magnetic resonance imaging (fMRI) data extracted from
+ published articles.
+ .
+ This package provides an atlas for use with FSL (and FSLview in
+ particular) containing prior and posterior probabilities expressed as
+ z-scores of relevance of corresponding terms to any given brain
+ location.  Statistical maps should correspond to the one currently
+ found on http://beta.neurosynth.org.  All 525 terms are included.
+ .
+ Disclaimer: this atlas is not a part of official FSL distribution.
+
+Package: fsl-neurosynth-top100-atlas
+Architecture: all
+Depends: ${misc:Depends}
+Description: neurosynth - atlas for use with FSL, top 100 terms
+ NeuroSynth is a platform for large-scale, automated synthesis of
+ functional magnetic resonance imaging (fMRI) data extracted from
+ published articles.
+ .
+ This package provides an atlas for use with FSL (and FSLview in
+ particular) containing prior and posterior probabilities expressed as
+ z-scores of relevance of corresponding terms to any given brain
+ location.  Statistical maps should correspond to the one currently
+ found on http://beta.neurosynth.org.  Only 100 of most popular (by
+ number of articles) terms are included to provide a lightweight
+ version of the atlas.
+ .
+ Disclaimer: this atlas is not a part of official FSL distribution.

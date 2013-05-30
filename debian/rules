@@ -1,0 +1,30 @@
+#!/usr/bin/make -f
+
+export SHELL=/bin/bash
+
+srcpkg = $(shell LC_ALL=C dpkg-parsechangelog | grep '^Source:' | cut -d ' ' -f 2,2)
+debver = $(shell LC_ALL=C dpkg-parsechangelog | grep '^Version:' | cut -d ' ' -f 2,2 )
+uver = $(shell echo $(debver) | cut -d '-' -f 1,1 )
+
+# one ring to rule them all ...
+%:
+	dh $@
+
+override_dh_auto_clean:
+	rm -rf build
+
+override_dh_auto_build:
+	mkdir -p build
+	: # Build atlases with all terms
+	scripts/generate_neurosynth_atlases -o build
+	: # Build atlases with top 100 terms
+	scripts/generate_neurosynth_atlases -o build -n 100
+
+get_orig_source:
+	curl -O http://neurosynth.org/data/current_data.tar.gz && \
+	nuver=`tar -tzvf current_data.tar.gz | awk '{print $$4;}' | sort -nr | head -n 1 | sed -e 's,-,,g' -e 's,^,0.0.,g'` && \
+	tar -xzvf current_data.tar.gz && \
+	mv {database,features}.txt data/ && \
+	git add data/*.txt && git commit -m "Fresh data v. $$nver" && \
+	git tag -m "NeuroSynth dataset v. $$nver" $$nver && \
+	dch --newversion $$nver-1 --force-distribution --distribution data
