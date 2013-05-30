@@ -1,3 +1,6 @@
 /usr/share/data/neurosynth/atlases/NeuroSynth-prior_z.xml /usr/share/fsl/data/atlases/NeuroSynth-prior_z.xml
 /usr/share/data/neurosynth/atlases/NeuroSynth-posterior_z.xml /usr/share/fsl/data/atlases/NeuroSynth-posterior_z.xml
-/usr/share/data/neurosynth/atlases/NeuroSynth /usr/share/fsl/data/atlases/NeuroSynth
+/usr/share/data/neurosynth/atlases/NeuroSynth/NeuroSynth-posterior_z-maxstat-thr2-2mm.nii.gz /usr/share/fsl/data/atlases/NeuroSynth/NeuroSynth-posterior_z-maxstat-thr2-2mm.nii.gz
+/usr/share/data/neurosynth/atlases/NeuroSynth/NeuroSynth-posterior_z-stat-2mm.nii.gz /usr/share/fsl/data/atlases/NeuroSynth/NeuroSynth-posterior_z-stat-2mm.nii.gz
+/usr/share/data/neurosynth/atlases/NeuroSynth/NeuroSynth-prior_z-maxstat-thr2-2mm.nii.gz /usr/share/fsl/data/atlases/NeuroSynth/NeuroSynth-prior_z-maxstat-thr2-2mm.nii.gz
+/usr/share/data/neurosynth/atlases/NeuroSynth/NeuroSynth-prior_z-stat-2mm.nii.gz /usr/share/fsl/data/atlases/NeuroSynth/NeuroSynth-prior_z-stat-2mm.nii.gz
