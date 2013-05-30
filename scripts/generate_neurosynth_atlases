@@ -31,6 +31,7 @@
 __author__ = 'Yaroslav Halchenko'
 __copyright__ = 'Copyright (c) 2013 Yaroslav Halchenko'
 __license__ = 'MIT'
+__version__ = "0.1"
 
 import os
 import cPickle
@@ -42,12 +43,6 @@ import nibabel as nib                   # To load/save nifti volumes
 import neurosynth
 from neurosynth.base.dataset import Dataset
 from neurosynth.analysis import meta
-
-verbosity = 3
-
-def verbose(level, s, fmt={}):
-    if level <= verbosity:
-        print " "*max(0, level-1), s % fmt
 
 def get_header(hdr, data, colormap=None):
     header={'cal_min': 0,
@@ -193,40 +188,67 @@ def get_result_volume(data, header, volume):
 
 if __name__ == "__main__":
 
-    dataset = Dataset('data/database.txt')
-    dataset.add_features('data/features.txt')
+    # Cmdline options
+    import argparse
 
-    outdir = "/tmp"
-    ntopfeatures = 3 # 100 # None # 10 #0
+    parser = argparse.ArgumentParser(
+        description="Generate FSL atlases from a provided NeuroSynth dataset",
+        add_help=True,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        version=__version__)
+
+    parser.add_argument('-d', '--database-file',
+                        default="data/database.txt", help="database.txt CSV")
+    parser.add_argument('-f', '--features-file',
+                        default="data/features.txt", help="features.txt CSV")
+    parser.add_argument('-n', '--n-top-features', type=int,
+                        default=None,
+                        help="Number of top (by papers number) features/terms "
+                        "to consider.  Default: None which corresponds to all "
+                        "papers")
+    parser.add_argument('-o', '--output-directory',
+                        default='.',
+                        help="Output directory")
+
+    args = parser.parse_args()
+
+    # Some additional hardcoded for now options
     q = .05
     min_studies = .01		# has to be present in 1% of studies
     image_types = dict([
-    	    #('pFgA',              ('posterior',   (0, 1))),
-    	    ('pFgA_z_FDR_%s' % q, ('posterior_z', (-20, 20))),
-     	    #('pAgF_z_FDR_%s' % q, ('prior_z',     (-40, 40))),
-     	    #('pA',                ('prior_on_articles', (0, 1)))
+            #('pFgA',              ('posterior',   (0, 1))),
+            ('pFgA_z_FDR_%s' % q, ('posterior_z', (-20, 20))),
+            ('pAgF_z_FDR_%s' % q, ('prior_z',     (-40, 40))),
+            #('pA',                ('prior_article', (0, 1)))
     ])
     threshold = 0.001
 
-    if ntopfeatures:
+
+    # Load the dataset
+    dataset = Dataset(args.database_file)
+    dataset.add_features(args.features_file)
+
+    # Figure out top features (if not all)
+    if args.n_top_features:
        #feature_counts = (dataset.feature_table.data > .001).sum(axis=1)
        feature_counts = dataset.get_feature_counts(threshold=threshold).items()
        feature_counts = sorted(feature_counts, key=lambda x:x[1], reverse=True)
 
-       top_features = [x[0] for x in feature_counts[:ntopfeatures]]
+       top_features = [x[0] for x in feature_counts[:args.n_top_features]]
        # and now sort them alphabetically for a sanity of the user
     else:
        top_features = dataset.get_feature_names()
 
     top_features = sorted(top_features)
 
+    # Prepare result storage and run meta-analysis per each term (AKA feature
     result_shape = (dataset.volume.num_vox_in_mask, len(top_features))
     result = {i: np.zeros(result_shape) for i in image_types.keys()}
     for i, f in enumerate(top_features):
         ids = dataset.get_ids_by_features(f, threshold=threshold)
         ma = meta.MetaAnalysis(dataset, ids, q=q, min_studies=min_studies)
         for image_type in result.keys():
-        	result[image_type][:, i] = ma.images[image_type]
+            result[image_type][:, i] = ma.images[image_type]
 
     for name, r in result.iteritems():
         l = image_types[name][1]
@@ -236,39 +258,64 @@ if __name__ == "__main__":
 
     # and tune up for pA since it is the same across all features
     if 'pA' in result:
-       result['pA'] = result['pA'][:, 0]
+       result['pA'] = result['pA'][:, 0] * 100.
 
+    # Tune up and save per each interesting statistic
+    # name = 'pFgA_z_FDR_%s' % q
+    for name in image_types.keys():
+        r = result[name]
+        r_volume = get_result_volume(r,
+                        header=dataset.volume.get_header(),
+                volume=dataset.volume)
+        rabs = np.abs(r[np.nonzero(r)])
+        rminabs = np.min(rabs)
+        rmaxabs = np.max(rabs)
+        del rabs
 
-    name = 'pFgA_z_FDR_%s' % q
-    r = result[name]
-    r_volume = get_result_volume(r,
-        	        header=dataset.volume.get_header(),
-    		volume=dataset.volume)
-    rabs = np.abs(r[np.nonzero(r)])
-    rminabs = np.min(rabs)
-    rmaxabs = np.max(rabs)
-    del rabs
+        nfeatures = len(top_features)
+        image_type_ = image_types[name][0]
 
-    nfeatures = len(top_features)
-    image_type_ = image_types[name][0]
-    a = make_atlas({2: r_volume.get_data()},
-    	       top_features,
-                   "NeuroSynth (http://neurosynth.org) %d terms (%s)" % (nfeatures, image_type_),
-                   name="NeuroSynth-%d-%s" % (nfeatures, image_type_),
-                   imagefilename="NeuroSynth-%d-%s" % (nfeatures, image_type_),
-                   topdir=outdir,
-                   subdir='NeuroSynth',
-    	       type_="Statistic",
-                   images_thr=[2.3],
-                   nifti_hdrs={2: r_volume.get_header()},
-    	       atlas_options=dict(
+        statmaps = r_volume.get_data()
+        if '_z' in name:
+            atlas_kwargs = dict(
+                type_="Statistic",
+                images_thr=[2.3],
+                atlas_options=dict(
                     shortname="NST%d" % nfeatures,
-    		precision=2,
-    		statistic="z",
-    		units="",
-    		lower="%.2f" % rminabs,
-    		upper="%.2f" % rmaxabs,
-    		description="Generated using NeuroSynth %s with following "
-    		    "parameters: FDR=%.2f threshold=%g min_studies=%.2f"
-                        % (neurosynth.__version__, q, threshold, min_studies))
-    	       )
+                    precision=2,
+                    statistic="z",
+                    units=""))
+            features = top_features
+        else:
+            assert(name == 'pA')
+            # This is not good anyways since below functionality assumes 4d image with
+            atlas_kwargs = dict(
+                type_="Probabilistic",
+                images_thr=[],
+                atlas_options=dict(shortname="NST%d" % nfeatures))
+            features = ['Articles prior']
+            statmaps = statmaps[..., None] # add rudimentary 4th dimension
+
+        atlas_kwargs['atlas_options'].update(
+            dict(
+                description =
+                    "Generated using NeuroSynth %s using dataset from 2013-03-28 "
+                    "with following analysis parameters: "
+                    "%d top terms FDR=%.2f threshold=%g min_studies=%.2f"
+                    % (neurosynth.__version__, nfeatures, q, threshold, min_studies),
+                lower="%.2f" % rminabs,
+                upper="%.2f" % rmaxabs,
+                )
+            )
+
+        a = make_atlas(
+            {2: statmaps},
+            features,
+            "NeuroSynth (http://neurosynth.org) %d terms (%s)" % (nfeatures, image_type_),
+            name="NeuroSynth-%d-%s" % (nfeatures, image_type_),
+            imagefilename="NeuroSynth-%d-%s" % (nfeatures, image_type_),
+            topdir=args.output_directory,
+            subdir='NeuroSynth',
+            nifti_hdrs={2: r_volume.get_header()},
+            **atlas_kwargs
+            )
