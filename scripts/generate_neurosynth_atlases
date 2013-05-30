@@ -198,9 +198,9 @@ if __name__ == "__main__":
         version=__version__)
 
     parser.add_argument('-d', '--database-file',
-                        default="data/database.txt", help="database.txt CSV")
+                        default="database.txt", help="database.txt CSV")
     parser.add_argument('-f', '--features-file',
-                        default="data/features.txt", help="features.txt CSV")
+                        default="features.txt", help="features.txt CSV")
     parser.add_argument('-n', '--n-top-features', type=int,
                         default=None,
                         help="Number of top (by papers number) features/terms "
