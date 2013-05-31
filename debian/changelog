@@ -1,3 +1,9 @@
+neurosynth-data (0.0.20130328-2) UNRELEASED; urgency=low
+
+  * Adjusting URLs to now lowercased organization/project on github
+
+ -- Yaroslav Halchenko <debian@onerussian.com>  Fri, 31 May 2013 13:35:06 -0400
+
 neurosynth-data (0.0.20130328-1) data; urgency=low
 
   * Initial release.
