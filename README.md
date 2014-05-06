@@ -13,6 +13,8 @@ Current data
 ------------
 The current dataset (version 0.3) was released on April 4, 2014. The database.txt file contains activation data for over 8,000 studies. The features.txt file contains feature information for nearly 3,000 term-based features. Note that unlike previous feature data releases, the current release contains term-based features derived only from the abstracts of articles in the Neurosynth database, and not from the full text. Thus, a value of, say, 0.03 for a feature like "emotion" would indicate that the term 'emotion' constitutes 3% of all word tokens in the abstract of a given study.
 
+**IMPORTANT NOTE**: Beginning with version 0.3, studies in both the features and database files are identified by PubMed ID (rather than the doi used previously). This means that if you've previously (i.e., pre-April 2014) generated a Dataset instance using an older database.txt file, you'll need to re-generate the Dataset before loading new features.
+
 Archive
 -------
 The archive folder contains past data releases. Each tarred and gzipped archive contains a pair of database.txt and features.txt files. Currently archived data include:
