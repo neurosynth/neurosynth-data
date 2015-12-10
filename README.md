@@ -13,7 +13,7 @@ Current data
 ------------
 The latest data file is always stored in current_data.tar.gz in the root folder (and mirrored in the archive/ folder).
 
-The current dataset is version 0.5, released on February 23, 2015. The archive contains two files: database.txt and features.txt. The database.txt file contains activation data for over 10,900 studies. The features.txt file contains feature information for over 3,300 term-based features. Note that unlike previous feature data releases (prior to v0.3), the current release contains term-based features derived only from the abstracts of articles in the Neurosynth database, and not from the full text.
+The current dataset is version 0.6, released July, 2015. The archive contains two files: database.txt and features.txt. The database.txt file contains activation data for 11,406 studies. The features.txt file contains feature information for over 3,300 term-based features. Note that unlike previous feature data releases (prior to v0.3), the current release contains term-based features derived only from the abstracts of articles in the Neurosynth database, and not from the full text. This change was introduced in order to improve specificity and reproducibility of results.
 
 Additionally, unlike previous releases, the present feature set includes not only single word features, but also N-gram features (e.g., "working memory", "emotion regulation", etc.).
 
