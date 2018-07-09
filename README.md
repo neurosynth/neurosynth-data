@@ -1,6 +1,6 @@
 neurosynth-data
 ===============
-This repository contains data files for use with the [Neurosynth](https://github.com/neurosynth/neurosynth) codebase.
+This repository contains data files for use with the [Neurosynth](https://github.com/neurosynth/neurosynth) codebase. All data are released under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1.0/). To a first approximation, this means you can do whatever you want with these data (including sharing, using, adapting, and modifying the data) as long as you attribute any public use, share any derivative database under the same license, and keep any derivative data open. See the license file for further details.
 
 Repository structure
 --------------------
