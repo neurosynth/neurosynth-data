@@ -2,7 +2,8 @@
 
 This repository contains data files for use with the [Neurosynth](https://github.com/neurosynth/neurosynth) codebase.
 All data are released under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1.0/).
-To a first approximation, this means you can do whatever you want with these data (including sharing, using, adapting, and modifying the data) as long as you attribute any public use, share any derivative database under the same license, and keep any derivative data open.
+To a first approximation, this means you can do whatever you want with these data (including sharing, using, adapting, and modifying the data)
+as long as you attribute any public use, share any derivative database under the same license, and keep any derivative data open.
 See the license file for further details.
 
 ## Repository structure
@@ -37,7 +38,8 @@ The current dataset is version 0.7, released July, 2018. Files from this version
 ## Vocabularies
 
 The raw text used to annotate the Neurosynth database is the article abstract,
-which we cannot share directly but which can be downloaded easily from PubMed with a tool like [`nimare.extract.download_abstracts`](https://nimare.readthedocs.io/en/latest/generated/nimare.extract.download_abstracts.html#nimare.extract.download_abstracts).
+which we cannot share directly but which can be downloaded easily from PubMed with a tool like
+[`nimare.extract.download_abstracts`](https://nimare.readthedocs.io/en/latest/generated/nimare.extract.download_abstracts.html#nimare.extract.download_abstracts).
 
 However, the actual annotations are available in this repository.
 Neurosynth currently includes two annotation approaches, resulting in 1-5 vocabularies, depending on the database version.
@@ -69,10 +71,10 @@ import numpy as np
 import pandas as pd
 from scipy import sparse
 
-feature_data_sparse = sparse.load_npz("data-neurosynth_source-abstract_vocab-terms_type-tfidf_version-7_features.npz")
+feature_data_sparse = sparse.load_npz("data-neurosynth_version-7_vocab-terms_source-abstract_type-tfidf_features.npz")
 feature_data = feature_data_sparse.todense()
-ids = np.genfromtxt("data-neurosynth_version-7_ids.txt", dtype=str).tolist()
-feature_names = np.genfromtxt("data-neurosynth_vocab-terms_version-7_vocabulary.txt", dtype=str, delimiter="\t").tolist()
+ids = np.genfromtxt("data-neurosynth_version-7_ids.txt", dtype=str, delimiter="\t").tolist()
+feature_names = np.genfromtxt("data-neurosynth_version-7_vocab-terms_vocabulary.txt", dtype=str, delimiter="\t").tolist()
 
 feature_df = pd.DataFrame(index=ids, columns=feature_names, data=feature_data)
 ```
