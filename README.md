@@ -13,22 +13,30 @@ All versions of the Neurosynth database (except for the 0.2 version from May 201
 Files are named according to a number of factors, including the "vocabulary", the database version, and the type of data stored in the file.
 Here is a list of relevant fields:
 
-- Files ending in `_database.tsv.gz` contain the coordinates and metadata for different versions of the Neurosynth database.
+- Files ending in `coordinates.tsv.gz` contain the coordinates for different versions of the Neurosynth database.
+  They contain one row for each coordinate.
   These files are tab-delimited and compressed, and they can be loaded with `pandas.read_table()`.
-- Files ending in `_ids.txt` contain a list of the PubMed IDs in the database for a given version.
+- Files ending in `metadata.tsv.gz` contain the metadata for different versions of the Neurosynth database.
+  Each study (ID) is stored on its own line in the file.
+  These IDs are in the same order as the `id` column of the associated `coordinates.tsv.gz` file,
+  but the rows will differ because the coordinates file will contain multiple rows per study.
+  These files are tab-delimited and compressed, and they can be loaded with `pandas.read_table()`.
+- Files ending in `ids.txt` contain a list of the PubMed IDs in the database for a given version.
   Each ID is stored on its own line in the file.
-  These IDs are in the same order as the IDs in the `id` column of the `database.tsv.gz` file with the same `version` value.
-  These files exist as an index for the files ending in `_features.npz`.
-- Files ending in `_features.npz` contain feature values for different types of "vocabularies".
+  These IDs are in the same order as the IDs in the `id` column of the `metadata.tsv.gz` file with the same `version` value.
+  They are also in the same order as the `id` column of the associated `coordinates.tsv.gz` file,
+  but the rows will differ because the coordinates file will contain multiple rows per study.
+  These files exist as an index for the files ending in `features.npz`.
+- Files ending in `features.npz` contain feature values for different types of "vocabularies".
   These files are stored as compressed, sparse matrices in order to reduce file size.
   Each file, once loaded and reconstructed into a dense matrix, contains one row per study and one column per label.
-  Associated labels are stored in the files ending in `_vocabulary.txt`.
-- Files ending in `_vocabulary.txt` contain a list of the labels associated with the accompanying `_features.npz` file.
+  Associated labels are stored in the files ending in `vocabulary.txt`.
+- Files ending in `vocabulary.txt` contain a list of the labels associated with the accompanying `_features.npz` file.
   Each label is stored on its own line in the file.
-  These files match the columns of the associated `_features.npz` file.
-- Files ending in `_metadata.json` contain additional information about the file with the same name (except for the suffix and extension).
+  These files match the columns of the associated `features.npz` file.
+- Files ending in `metadata.json` contain additional information about the file with the same name (except for the suffix and extension).
   For example, the metadata files for the LDA vocabularies contain descriptions about the topic modeling procedure used to generate the associated `_features.npz` and `_vocabulary.txt` files.
-- Files ending in `_keys.tsv` contain the top 100 words for each topic from the associated topic model.
+- Files ending in `keys.tsv` contain the top 100 words for each topic from the associated topic model.
   These top words can be useful when trying to summarize the topics.
 
 ## Current data
