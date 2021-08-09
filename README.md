@@ -31,11 +31,11 @@ Here is a list of relevant fields:
   These files are stored as compressed, sparse matrices in order to reduce file size.
   Each file, once loaded and reconstructed into a dense matrix, contains one row per study and one column per label.
   Associated labels are stored in the files ending in `vocabulary.txt`.
-- Files ending in `vocabulary.txt` contain a list of the labels associated with the accompanying `_features.npz` file.
+- Files ending in `vocabulary.txt` contain a list of the labels associated with the accompanying `features.npz` file.
   Each label is stored on its own line in the file.
   These files match the columns of the associated `features.npz` file.
 - Files ending in `metadata.json` contain additional information about the file with the same name (except for the suffix and extension).
-  For example, the metadata files for the LDA vocabularies contain descriptions about the topic modeling procedure used to generate the associated `_features.npz` and `_vocabulary.txt` files.
+  For example, the metadata files for the LDA vocabularies contain descriptions about the topic modeling procedure used to generate the associated `features.npz` and `vocabulary.txt` files.
 - Files ending in `keys.tsv` contain the top 100 words for each topic from the associated topic model.
   These top words can be useful when trying to summarize the topics.
 
