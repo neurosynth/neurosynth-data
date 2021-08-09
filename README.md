@@ -20,17 +20,13 @@ Here is a list of relevant fields:
   Each study (ID) is stored on its own line in the file.
   These IDs are in the same order as the `id` column of the associated `coordinates.tsv.gz` file,
   but the rows will differ because the coordinates file will contain multiple rows per study.
+  They are also in the same order as the rows in any `features.npz` files for the same version.
   These files are tab-delimited and compressed, and they can be loaded with `pandas.read_table()`.
-- Files ending in `ids.txt` contain a list of the PubMed IDs in the database for a given version.
-  Each ID is stored on its own line in the file.
-  These IDs are in the same order as the IDs in the `id` column of the `metadata.tsv.gz` file with the same `version` value.
-  They are also in the same order as the `id` column of the associated `coordinates.tsv.gz` file,
-  but the rows will differ because the coordinates file will contain multiple rows per study.
-  These files exist as an index for the files ending in `features.npz`.
 - Files ending in `features.npz` contain feature values for different types of "vocabularies".
   These files are stored as compressed, sparse matrices in order to reduce file size.
   Each file, once loaded and reconstructed into a dense matrix, contains one row per study and one column per label.
-  Associated labels are stored in the files ending in `vocabulary.txt`.
+  Associated labels are stored in the files ending in `vocabulary.txt` and
+  study IDs can be extracted from the associated `metadata.tsv.gz` file.
 - Files ending in `vocabulary.txt` contain a list of the labels associated with the accompanying `features.npz` file.
   Each label is stored on its own line in the file.
   These files match the columns of the associated `features.npz` file.
@@ -70,7 +66,7 @@ Neurosynth currently includes two annotation approaches, resulting in 1-5 vocabu
 
 ## Reconstructing feature data
 
-If you want to reconstruct the feature data into a spreadsheet-like format, you will need to combine the `features.npz`, `ids.txt`, and `vocabulary.txt` files.
+If you want to reconstruct the feature data into a spreadsheet-like format, you will need to combine the `features.npz`, `metadata.tsv.gz`, and `vocabulary.txt` files.
 
 Here is some Python code that can do this, using the version 0.7's term-based features as an example:
 
@@ -81,7 +77,8 @@ from scipy import sparse
 
 feature_data_sparse = sparse.load_npz("data-neurosynth_version-7_vocab-terms_source-abstract_type-tfidf_features.npz")
 feature_data = feature_data_sparse.todense()
-ids = np.genfromtxt("data-neurosynth_version-7_ids.txt", dtype=str, delimiter="\t").tolist()
+metadata_df = pd.read_table("data-neurosynth_version-7_metadata.tsv.gz")
+ids = metadata_df["id"].tolist()
 feature_names = np.genfromtxt("data-neurosynth_version-7_vocab-terms_vocabulary.txt", dtype=str, delimiter="\t").tolist()
 
 feature_df = pd.DataFrame(index=ids, columns=feature_names, data=feature_data)
