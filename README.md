@@ -1,10 +1,18 @@
-# neurosynth-data
+# neurosynth-data (DEPRECATED)
+
+
+**USE THIS INSTEAD: https://neurostore.org/api/neurostore-studyset-releases/**
+
+THE NEUROSTORE RELEASE IS LARGER AND MORE DETAILED;
+THE FILES IN THIS REPOSITORY SHOULD ONLY BE USED FOR REPRODUCING OLD ANALYSES.
+DO NOT CREATE NEW ANALYSES WITH THIS DATA.
 
 This repository contains data files for use with the [Neurosynth](https://github.com/neurosynth/neurosynth) codebase.
 All data are released under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1.0/).
 To a first approximation, this means you can do whatever you want with these data (including sharing, using, adapting, and modifying the data)
 as long as you attribute any public use, share any derivative database under the same license, and keep any derivative data open.
 See the license file for further details.
+
 
 ## Repository structure
 
